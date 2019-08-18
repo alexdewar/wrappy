@@ -32,8 +32,10 @@ BOOST_AUTO_TEST_CASE(builtins)
     args[0] = wrappy::construct(255ll);
     auto longval = wrappy::callWithArgs("hex", args);
 
-    BOOST_CHECK_EQUAL(intval.str(), "0xff");
-    BOOST_CHECK_EQUAL(longval.str(), "0xffL");
+    std::string intval_str = intval.str();
+    std::string longval_str = longval.str();
+    BOOST_TEST(intval.str() == "0xff");
+    BOOST_TEST(longval.str() == "0xffL");
 }
 
 BOOST_AUTO_TEST_CASE(error)

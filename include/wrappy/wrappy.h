@@ -1,5 +1,10 @@
 #pragma once
 
+// Python header must be included first since they insist on
+// unconditionally defining some system macros
+// (http://bugs.python.org/issue1045893, still broken in python3.4)
+#include <Python.h>
+
 #include <map>
 #include <vector>
 #include <string>
@@ -21,6 +26,16 @@ typedef _object PyObject;
 
 namespace wrappy {
 
+/*
+ * Python 3 uses unicode strings, so we have to allocate memory and copy the
+ * byte array out. Using std::string seems the tidiest way of doing this.
+ */
+#if PY_MAJOR_VERSION >= 3
+typedef std::string string_t;
+#else
+typedef const char *string_t;
+#endif
+
 class WrappyError : public std::runtime_error {
 public:
     WrappyError(const std::string& str)
@@ -38,7 +53,7 @@ public:
     // not to do non-const things with it.
     long long num() const;
     double floating() const;
-    const char* str() const;
+    string_t str() const;
     PyObject* get() const;
     PythonObject attr(const std::string& x) const; // returns self.x
 
@@ -71,14 +86,14 @@ private:
     PyObject* obj_;
 };
 
-// Note that this is an input iterator, iterators cannot 
+// Note that this is an input iterator, iterators cannot
 // be stored, rewound, or compared to anything but "end"
 struct PythonIterator {
     PythonIterator& operator++(); // pre-increment
     PythonObject operator*();     // dereference
-    // *only* for comparison to "end", python iterators have 
+    // *only* for comparison to "end", python iterators have
     // no concept of position or comparability
-    bool operator!=(const PythonIterator&); 
+    bool operator!=(const PythonIterator&);
 
 private:
     PythonIterator(bool, PythonObject);
@@ -102,12 +117,12 @@ void addModuleSearchPath(const std::string& path);
 
 // There is one quirk of call() for the case of member methods:
 //
-//     call("module.A.foo") 
+//     call("module.A.foo")
 //
 // calls the unbound method "foo", so it is necessary to provide an instance
 // of A as the first argument, while
 //
-//     auto a = call("module.A"); call(a, "foo"); 
+//     auto a = call("module.A"); call(a, "foo");
 //
 // calls the method "foo" that is already bound to a, so providing an explicit
 // self argument in that case is an error.
@@ -130,8 +145,8 @@ PythonObject construct(PythonObject); // identity
 PythonObject construct(const std::vector<PythonObject>&); // python list
 
 // TODO there is no good way to actually call these constructed functions
-typedef PythonObject (*Lambda)(const std::vector<PythonObject>& args, const std::map<const char*, PythonObject>& kwargs);
-typedef PythonObject (*LambdaWithData)(const std::vector<PythonObject>& args, const std::map<const char*, PythonObject>& kwargs, void* userdata);
+typedef PythonObject (*Lambda)(const std::vector<PythonObject>& args, const std::map<string_t, PythonObject>& kwargs);
+typedef PythonObject (*LambdaWithData)(const std::vector<PythonObject>& args, const std::map<string_t, PythonObject>& kwargs, void* userdata);
 PythonObject construct(Lambda);
 PythonObject construct(LambdaWithData, void*);
 

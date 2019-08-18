@@ -2,12 +2,8 @@ cmake_minimum_required (VERSION 2.8)
 project (wrappy)
 
 # Dependencies
-find_package(PythonLibs 2.7 REQUIRED)
-# If i had one word to describe python versioning,
-# it would be "broken as fuck"
-if (NOT PYTHON_VERSION VERSION_LESS 3.0)
-  error("Requires python 2.x")
-endif()
+# If PYTHON_VERSION isn't set, use the default version on this system
+find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
 
 option( WRAPPY_BUILD_DEMOS "Build the wrappy tests" ON)
 
@@ -20,7 +16,7 @@ add_library(wrappy SHARED wrappy.cpp)
 set_target_properties(wrappy PROPERTIES VERSION 1.0.0)
 set_target_properties(wrappy PROPERTIES SOVERSION 1)
 
-target_include_directories(wrappy PRIVATE ${PYTHON_INCLUDE_DIRS})
+include_directories(wrappy PUBLIC ${PYTHON_INCLUDE_DIRS})
 target_include_directories(wrappy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 
 if(${CMAKE_VERSION} VERSION_LESS 3.1)

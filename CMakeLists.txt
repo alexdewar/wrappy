@@ -11,8 +11,13 @@ if (WRAPPY_BUILD_DEMOS)
   find_package(Boost COMPONENTS unit_test_framework)
 endif()
 
+# Default to making a shared lib
+if(NOT DEFINED LIBRARY_TYPE)
+  set(LIBRARY_TYPE SHARED)
+endif()
+
 # wrappy library target
-add_library(wrappy SHARED wrappy.cpp)
+add_library(wrappy ${LIBRARY_TYPE} wrappy.cpp)
 set_target_properties(wrappy PROPERTIES VERSION 1.0.0)
 set_target_properties(wrappy PROPERTIES SOVERSION 1)
 

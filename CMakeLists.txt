@@ -34,26 +34,26 @@ endif()
 
 target_link_libraries(wrappy ${PYTHON_LIBRARIES})
 
-# Examples
-add_executable(example_email examples/email.cpp)
-add_executable(example_turtle examples/turtle.cpp)
-add_executable(example_plot examples/plot.cpp)
-target_link_libraries(example_email wrappy)
-target_link_libraries(example_turtle wrappy)
-target_link_libraries(example_plot wrappy)
+# # Examples
+# add_executable(example_email examples/email.cpp)
+# add_executable(example_turtle examples/turtle.cpp)
+# add_executable(example_plot examples/plot.cpp)
+# target_link_libraries(example_email wrappy)
+# target_link_libraries(example_turtle wrappy)
+# target_link_libraries(example_plot wrappy)
 
-# Tests
-if(WRAPPY_BUILD_DEMOS AND Boost_UNIT_TEST_FRAMEWORK_FOUND)
-  enable_testing()
-  add_executable(test_stdlib tests/stdlib.cpp)
-  add_executable(test_sugar tests/sugar.cpp)
-  target_link_libraries(test_stdlib wrappy ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
-  target_link_libraries(test_sugar wrappy ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
-  add_test(NAME stdlib COMMAND test_stdlib)
-  add_test(NAME sugar  COMMAND test_sugar)
-else()
-  message("Boost Unit testing libraries not found, not compiling tests")
-endif()
+# # Tests
+# if(WRAPPY_BUILD_DEMOS AND Boost_UNIT_TEST_FRAMEWORK_FOUND)
+#   enable_testing()
+#   add_executable(test_stdlib tests/stdlib.cpp)
+#   add_executable(test_sugar tests/sugar.cpp)
+#   target_link_libraries(test_stdlib wrappy ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
+#   target_link_libraries(test_sugar wrappy ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
+#   add_test(NAME stdlib COMMAND test_stdlib)
+#   add_test(NAME sugar  COMMAND test_sugar)
+# else()
+#   message("Boost Unit testing libraries not found, not compiling tests")
+# endif()
 
 # Installation
 install(TARGETS wrappy DESTINATION lib/)

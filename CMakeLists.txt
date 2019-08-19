@@ -5,7 +5,7 @@ project (wrappy)
 # If PYTHON_VERSION isn't set, use the default version on this system
 find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
 
-option( WRAPPY_BUILD_DEMOS "Build the wrappy tests" ON)
+option( WRAPPY_BUILD_DEMOS "Build the wrappy tests" OFF)
 
 if (WRAPPY_BUILD_DEMOS)
   find_package(Boost COMPONENTS unit_test_framework)
